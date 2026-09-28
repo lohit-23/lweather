@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraWeather AR | Gesture Webcam Filter</title>
+  <meta name="description" content="Augmented reality weather experience directly inside your webcam feed, controlled by hand finger gestures.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- MediaPipe Hands & Camera Utils -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-weather="sun">
+
+  <!-- Fullscreen AR Webcam + Weather Canvas Viewport -->
+  <div class="ar-viewport-container">
+    <!-- Hidden raw video element -->
+    <video id="webcam-video" playsinline muted autoplay></video>
+    
+    <!-- Unified AR Canvas: Video Stream + Weather Particles + AR Hand Tracking -->
+    <canvas id="ar-canvas"></canvas>
+
+    <!-- Lightning flash layer for rain -->
+    <div id="lightning-flash" class="lightning-flash"></div>
+
+    <!-- Camera Loader / Permission Prompt -->
+    <div id="camera-loader" class="camera-loader">
+      <div class="loader-spinner"></div>
+      <h2 id="loader-title">Starting AR Webcam...</h2>
+      <p id="loader-sub">Please allow camera access when prompted.</p>
+      <button id="enable-cam-btn" class="enable-btn hidden">Enable Webcam</button>
+    </div>
+  </div>
+
+  <!-- Minimalist Floating Top HUD -->
+  <header class="floating-hud-top">
+    <div class="brand-pill">
+      <span class="brand-icon">⛅</span>
+      <span class="brand-title">AuraWeather AR</span>
+    </div>
+
+    <!-- Active Gesture & Weather Status Badge -->
+    <div class="status-pill" id="status-pill">
+      <span class="status-dot"></span>
+      <span class="status-gesture" id="status-gesture">☝️ 1 Finger</span>
+      <span class="status-sep">·</span>
+      <span class="status-weather" id="status-weather">Golden Sun</span>
+    </div>
+
+    <!-- Quick Utilities -->
+    <div class="top-actions">
+      <button id="sound-btn" class="hud-btn" title="Toggle Ambient Audio" aria-label="Toggle Sound">
+        <span id="sound-icon">🔇</span>
+      </button>
+      <button id="flip-btn" class="hud-btn" title="Flip / Mirror Camera" aria-label="Mirror Camera">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+        </svg>
+      </button>
+      <button id="skeleton-btn" class="hud-btn active" title="Toggle Hand Skeleton" aria-label="Toggle Hand Skeleton">
+        🖐️
+      </button>
+    </div>
+  </header>
+
+  <!-- Minimalist Floating Bottom Gesture Bar -->
+  <nav class="floating-hud-bottom" aria-label="Gesture and Weather Switcher">
+    <div class="dock-container">
+      <!-- 1 Finger: Sun -->
+      <button class="dock-btn active" data-fingers="1" data-weather="sun" id="btn-sun">
+        <span class="btn-icon">☀️</span>
+        <div class="btn-info">
+          <span class="btn-name">Sun</span>
+          <span class="btn-finger">1 ☝️</span>
+        </div>
+      </button>
+
+      <!-- 2 Fingers: Rain -->
+      <button class="dock-btn" data-fingers="2" data-weather="rain" id="btn-rain">
+        <span class="btn-icon">🌧️</span>
+        <div class="btn-info">
+          <span class="btn-name">Rain</span>
+          <span class="btn-finger">2 ✌️</span>
+        </div>
+      </button>
+
+      <!-- 3 Fingers: Snow -->
+      <button class="dock-btn" data-fingers="3" data-weather="snow" id="btn-snow">
+        <span class="btn-icon">❄️</span>
+        <div class="btn-info">
+          <span class="btn-name">Snow</span>
+          <span class="btn-finger">3 🤟</span>
+        </div>
+      </button>
+
+      <!-- 4 Fingers: Stars -->
+      <button class="dock-btn" data-fingers="4" data-weather="star" id="btn-star">
+        <span class="btn-icon">✨</span>
+        <div class="btn-info">
+          <span class="btn-name">Stars</span>
+          <span class="btn-finger">4 🖖</span>
+        </div>
+      </button>
+
+      <!-- 5 Fingers: Meteorites -->
+      <button class="dock-btn" data-fingers="5" data-weather="meteorites" id="btn-meteorites">
+        <span class="btn-icon">☄️</span>
+        <div class="btn-info">
+          <span class="btn-name">Meteors</span>
+          <span class="btn-finger">5 🖐️</span>
+        </div>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Notification Toast Message -->
+  <div class="toast-box" id="toast-box"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

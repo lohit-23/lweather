@@ -1,0 +1,29 @@
+# Render Blueprint Configuration for AuraWeather AR
+# Documentation: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: auraweather-ar
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: ./
+    # HTTP Security & Permission Headers
+    # Camera access is required for MediaPipe hand gesture tracking
+    headers:
+      - path: /*
+        name: Permissions-Policy
+        value: camera=*, microphone=()
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+    # Fallback rewrite route for Single Page Application
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
