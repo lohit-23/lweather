@@ -1,0 +1,21 @@
+# Netlify Configuration for AuraWeather AR
+# Documentation: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  publish = "."
+
+# HTTP Security & Permission Headers
+# Camera access is required for MediaPipe hand gesture tracking
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Permissions-Policy = "camera=*, microphone=()"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Fallback rewrite route for Single Page Application
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

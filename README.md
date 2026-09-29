@@ -3,7 +3,7 @@
 # 🌤️ AuraWeather AR
 ### Augmented Reality Weather Experience Powered by Real-Time Hand Gesture Vision
 
-[![Deploy to Render](https://img.shields.io/badge/Deploy_to-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/deploy)
+[![Deploy to Netlify](https://img.shields.io/badge/Deploy_to-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://app.netlify.com/start)
 [![MediaPipe](https://img.shields.io/badge/Google_MediaPipe-Hands_AI-0097A7?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/mediapipe)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  <a href="https://render.com/deploy">
-    <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render" height="38"/>
+  <a href="https://app.netlify.com/start">
+    <img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" height="38"/>
   </a>
 </p>
 
@@ -24,28 +24,20 @@
 
 ---
 
-## 🚀 Deployment (Render)
+## 🚀 Deployment (Netlify)
 
-Deploy this project live on Render with automatic HTTPS and camera permissions configured:
+Deploy this project live on Netlify with automatic HTTPS, camera permissions headers, and SPA redirects configured:
 
-### Option 1: Automatic Blueprint (Recommended)
-1. Push this repository to **GitHub** or **GitLab**.
-2. Log in to your **[Render Dashboard](https://dashboard.render.com/)** and click **New +** > **Blueprint**.
-3. Select and connect your repository. Render automatically reads [`render.yaml`](render.yaml) to configure the static site, camera security headers, and rewrite rules.
-4. Click **Apply** to deploy.
+### Option 1: Git Integration (Recommended)
+1. Push this repository to **GitHub**, **GitLab**, or **Bitbucket**.
+2. Log in to your **[Netlify Dashboard](https://app.netlify.com/)** and select **Add new site** > **Import an existing project**.
+3. Select your repository. Netlify automatically detects [`netlify.toml`](netlify.toml), setting the publish directory to root (`.`), configuring camera security headers, and setting up rewrite rules.
+4. Click **Deploy auraweather-ar**.
 
-### Option 2: Manual Static Site
-1. On your **Render Dashboard**, select **New +** > **Static Site**.
-2. Connect your repository.
-3. Configure the following settings:
-   - **Name**: `auraweather-ar`
-   - **Build Command**: *(leave empty)*
-   - **Publish Directory**: `./`
-4. Under **Advanced** > **Headers**, add the camera permission policy:
-   - **Path**: `/*`
-   - **Name**: `Permissions-Policy`
-   - **Value**: `camera=*, microphone=()`
-5. Click **Create Static Site**.
+### Option 2: Netlify Drop (Manual Drag & Drop)
+1. Navigate to **[Netlify Drop](https://app.netlify.com/drop)**.
+2. Drag and drop the project folder directly into the browser upload zone.
+3. Your site will be deployed instantly with SSL and camera support.
 
 ---
 
@@ -126,8 +118,8 @@ auraweather-ar/
 ├── index.html        # Semantic AR viewport container, HUD overlay & MediaPipe imports
 ├── style.css         # Modern glassmorphism system, responsive tokens, theme variables
 ├── script.js         # Core MediaPipe vision engine, particle simulation & audio synthesizer
-├── render.yaml       # Render Blueprint configuration with camera permission headers & rewrites
-└── README.md         # Technical documentation & Render deploy guide
+├── netlify.toml      # Netlify configuration with camera permission headers & rewrites
+└── README.md         # Technical documentation & Netlify deploy guide
 ```
 
 ---

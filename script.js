@@ -925,25 +925,36 @@ function countExtendedFingers(landmarks) {
   const thumbIP = landmarks[3];
   const pinkyMCP = landmarks[17];
   const indexMCP = landmarks[5];
-  if (dist(thumbTip, pinkyMCP) > dist(thumbIP, pinkyMCP) * 1.15 &&
-      dist(thumbTip, indexMCP) > dist(thumbIP, indexMCP) * 1.1) {
+  if (dist(thumbTip, pinkyMCP) > dist(thumbIP, pinkyMCP) * 1.12 &&
+      dist(thumbTip, indexMCP) > dist(thumbIP, indexMCP) * 1.05) {
     count++;
   }
 
-  // Index (8) vs PIP (6)
-  if (landmarks[8].y < landmarks[6].y || dist(landmarks[8], wrist) > dist(landmarks[6], wrist) * 1.25) count++;
-  // Middle (12) vs PIP (10)
-  if (landmarks[12].y < landmarks[10].y || dist(landmarks[12], wrist) > dist(landmarks[10], wrist) * 1.25) count++;
-  // Ring (16) vs PIP (14)
-  if (landmarks[16].y < landmarks[14].y || dist(landmarks[16], wrist) > dist(landmarks[14], wrist) * 1.25) count++;
-  // Pinky (20) vs PIP (18)
-  if (landmarks[20].y < landmarks[18].y || dist(landmarks[20], wrist) > dist(landmarks[18], wrist) * 1.25) count++;
+  // Index (8 vs 6 vs 5)
+  if (dist(landmarks[8], wrist) > dist(landmarks[6], wrist) * 1.15 || landmarks[8].y < landmarks[6].y) {
+    if (dist(landmarks[8], wrist) > dist(landmarks[5], wrist) * 1.08) count++;
+  }
+
+  // Middle (12 vs 10 vs 9)
+  if (dist(landmarks[12], wrist) > dist(landmarks[10], wrist) * 1.15 || landmarks[12].y < landmarks[10].y) {
+    if (dist(landmarks[12], wrist) > dist(landmarks[9], wrist) * 1.08) count++;
+  }
+
+  // Ring (16 vs 14 vs 13)
+  if (dist(landmarks[16], wrist) > dist(landmarks[14], wrist) * 1.15 || landmarks[16].y < landmarks[14].y) {
+    if (dist(landmarks[16], wrist) > dist(landmarks[13], wrist) * 1.08) count++;
+  }
+
+  // Pinky (20 vs 18 vs 17)
+  if (dist(landmarks[20], wrist) > dist(landmarks[18], wrist) * 1.15 || landmarks[20].y < landmarks[18].y) {
+    if (dist(landmarks[20], wrist) > dist(landmarks[17], wrist) * 1.08) count++;
+  }
 
   return count;
 }
 
 const buffer = [];
-const BUFFER_LEN = 6;
+const BUFFER_LEN = 5;
 
 function onHandResults(results) {
   if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
@@ -966,8 +977,8 @@ function onHandResults(results) {
 
     state.fingerCount = stable;
 
-    // Trigger weather if sustained for 4+ frames
-    if (max >= 4) {
+    // Trigger weather if sustained for 3+ frames
+    if (max >= 3) {
       switch (stable) {
         case 1: setWeather("sun"); break;
         case 2: setWeather("rain"); break;
@@ -983,6 +994,8 @@ function onHandResults(results) {
 }
 
 // Start MediaPipe Vision & Webcam
+let isProcessingFrame = false;
+
 async function startWebcamVision() {
   cameraLoader.classList.remove("hidden");
   loaderTitle.textContent = "Connecting to Webcam...";
@@ -990,18 +1003,18 @@ async function startWebcamVision() {
 
   try {
     if (typeof Hands === "undefined") {
-      throw new Error("MediaPipe library not loaded.");
+      throw new Error("MediaPipe library not loaded from CDN.");
     }
 
     const hands = new Hands({
-      locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
+      locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1675469240/${f}`
     });
 
     hands.setOptions({
       maxNumHands: 1,
       modelComplexity: 1,
-      minDetectionConfidence: 0.6,
-      minTrackingConfidence: 0.6
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
     });
 
     hands.onResults(onHandResults);
@@ -1009,21 +1022,39 @@ async function startWebcamVision() {
     if (typeof Camera !== "undefined") {
       const cam = new Camera(video, {
         onFrame: async () => {
-          await hands.send({ image: video });
+          if (video.videoWidth > 0 && !isProcessingFrame) {
+            isProcessingFrame = true;
+            try {
+              await hands.send({ image: video });
+            } catch (frameErr) {
+              console.debug("Hands inference frame skipped:", frameErr);
+            } finally {
+              isProcessingFrame = false;
+            }
+          }
         },
-        width: 1280,
-        height: 720
+        width: 640,
+        height: 480
       });
       await cam.start();
     } else {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" }
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" }
       });
       video.srcObject = stream;
       await video.play();
 
       async function loop() {
-        await hands.send({ image: video });
+        if (video.videoWidth > 0 && !isProcessingFrame) {
+          isProcessingFrame = true;
+          try {
+            await hands.send({ image: video });
+          } catch (frameErr) {
+            console.debug("Hands inference frame skipped:", frameErr);
+          } finally {
+            isProcessingFrame = false;
+          }
+        }
         requestAnimationFrame(loop);
       }
       requestAnimationFrame(loop);
@@ -1031,13 +1062,13 @@ async function startWebcamVision() {
 
     state.cameraReady = true;
     cameraLoader.classList.add("hidden");
-    showToast("Webcam connected! Show your fingers.", "📷");
+    showToast("Webcam connected! Show your hand.", "📷");
   } catch (err) {
     console.warn("Camera init warning:", err);
     loaderTitle.textContent = "Camera Access Blocked or Unavailable";
-    loaderSub.innerHTML = `You can still test and enjoy all weather animations using the buttons below or keys 1-5.<br><small>${err.message || ""}</small>`;
+    loaderSub.innerHTML = `Please check browser camera permissions (click the lock icon in your address bar).<br><small>${err.message || ""}</small>`;
     enableCamBtn.classList.remove("hidden");
-    showToast("Interactive mode enabled! Click icons below.", "💡");
+    showToast("Click 'Enable Webcam' or check camera permissions.", "⚠️");
   }
 }
 

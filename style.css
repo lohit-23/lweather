@@ -82,7 +82,14 @@ html, body {
 }
 
 #webcam-video {
-  display: none; /* Video is rendered directly to canvas with AR effects */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0.001;
+  pointer-events: none;
+  z-index: -999;
 }
 
 #ar-canvas {
