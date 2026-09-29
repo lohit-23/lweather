@@ -3,7 +3,7 @@
 # 🌤️ AuraWeather AR
 ### Augmented Reality Weather Experience Powered by Real-Time Hand Gesture Vision
 
-[![Deploy to Netlify](https://img.shields.io/badge/Deploy_to-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://app.netlify.com/start)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-lpweather.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://lpweather.netlify.app/)
 [![MediaPipe](https://img.shields.io/badge/Google_MediaPipe-Hands_AI-0097A7?style=for-the-badge&logo=google&logoColor=white)](https://developers.google.com/mediapipe)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -15,8 +15,8 @@
 </p>
 
 <p align="center">
-  <a href="https://app.netlify.com/start">
-    <img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" height="38"/>
+  <a href="https://lpweather.netlify.app/" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/🌐_Launch_Live_App-lpweather.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo" height="38"/>
   </a>
 </p>
 
@@ -24,9 +24,11 @@
 
 ---
 
-## 🚀 Deployment (Netlify)
+## 🚀 Live Demo & Deployment
 
-Deploy this project live on Netlify with automatic HTTPS, camera permissions headers, and SPA redirects configured:
+**Live Web App**: [https://lpweather.netlify.app/](https://lpweather.netlify.app/)
+
+The project is deployed on Netlify with automatic HTTPS, camera permissions headers, and SPA redirects configured:
 
 ### Option 1: Git Integration (Recommended)
 1. Push this repository to **GitHub**, **GitLab**, or **Bitbucket**.
@@ -128,8 +130,8 @@ auraweather-ar/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/auraweather-ar.git
-cd auraweather-ar
+git clone https://github.com/lohit-23/lweather.git
+cd lweather
 
 # Run via any local static server
 npx serve .
